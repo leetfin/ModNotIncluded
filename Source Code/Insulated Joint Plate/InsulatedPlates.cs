@@ -10,25 +10,15 @@ namespace InsulatedPlatesMod
     public static class Db_Initialize_Patch
     {
         public static void Prefix()
-        {
-#if VANILLA
-            // Vanilla prefers prefix() for adding buildings
-            bridgeHelpers.bridgeBuildMenu(InsulatedWireBridgeHighWattageConfig.ID, InsulatedWireBridgeHighWattageConfig.menu, InsulatedWireBridgeHighWattageConfig.pred);
-            bridgeHelpers.bridgeBuildMenu(InsulatedWireRefinedBridgeHighWattageConfig.ID, InsulatedWireRefinedBridgeHighWattageConfig.menu, InsulatedWireRefinedBridgeHighWattageConfig.pred);
-            bridgeHelpers.bridgeBuildMenu(LongInsulatedWireBridgeHighWattageConfig.ID, LongInsulatedWireBridgeHighWattageConfig.menu, LongInsulatedWireBridgeHighWattageConfig.pred);
-            bridgeHelpers.bridgeBuildMenu(LongInsulatedRefinedWireBridgeHighWattageConfig.ID, LongInsulatedRefinedWireBridgeHighWattageConfig.menu, LongInsulatedRefinedWireBridgeHighWattageConfig.pred);
-#endif
-        }
+        {}
 
         public static void Postfix()
         {
-#if SPACED_OUT
-            // DLC prefers postfix() for adding buildings
-            bridgeHelpers.bridgeBuildMenu(InsulatedWireBridgeHighWattageConfig.ID, InsulatedWireBridgeHighWattageConfig.menu, InsulatedWireBridgeHighWattageConfig.pred);
-            bridgeHelpers.bridgeBuildMenu(InsulatedWireRefinedBridgeHighWattageConfig.ID, InsulatedWireRefinedBridgeHighWattageConfig.menu,InsulatedWireRefinedBridgeHighWattageConfig.pred);
-            bridgeHelpers.bridgeBuildMenu(LongInsulatedWireBridgeHighWattageConfig.ID, LongInsulatedWireBridgeHighWattageConfig.menu, LongInsulatedWireBridgeHighWattageConfig.pred);
-            bridgeHelpers.bridgeBuildMenu(LongInsulatedRefinedWireBridgeHighWattageConfig.ID, LongInsulatedRefinedWireBridgeHighWattageConfig.menu, LongInsulatedRefinedWireBridgeHighWattageConfig.pred);
-#endif
+            ModUtil.AddBuildingToPlanScreen("Power", InsulatedWireBridgeHighWattageConfig.ID);
+            ModUtil.AddBuildingToPlanScreen("Power", InsulatedWireRefinedBridgeHighWattageConfig.ID);
+            ModUtil.AddBuildingToPlanScreen("Power", LongInsulatedWireBridgeHighWattageConfig.ID);
+            ModUtil.AddBuildingToPlanScreen("Power", LongInsulatedRefinedWireBridgeHighWattageConfig.ID);
+
             // Both prefer postfix() for adding tech tree entries
             bridgeHelpers.bridgeTechTree(InsulatedWireBridgeHighWattageConfig.ID, InsulatedWireBridgeHighWattageConfig.tech);
             bridgeHelpers.bridgeTechTree(InsulatedWireRefinedBridgeHighWattageConfig.ID, InsulatedWireRefinedBridgeHighWattageConfig.tech);
@@ -62,27 +52,6 @@ namespace InsulatedPlatesMod
 
     public class bridgeHelpers
     {
-        public static void bridgeBuildMenu(string door, string menu, string pred)
-        {
-            int index = TUNING.BUILDINGS.PLANORDER.FindIndex(x => x.category == menu);
-            if (index < 0)
-                return;
-            else
-            {
-                IList<string> data = TUNING.BUILDINGS.PLANORDER[index].data as IList<string>;
-                int num = -1;
-                foreach (string str in (IEnumerable<string>)data)
-                {
-                    if (str.Equals(pred))
-                        num = data.IndexOf(str);
-                }
-                if (num == -1)
-                    return;
-                else
-                    data.Insert(num + 1, door);
-            }
-        }
-
         public static void bridgeTechTree(string id, string researchGroup)
         {
             if (researchGroup == "none") return;
